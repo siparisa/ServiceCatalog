@@ -11,6 +11,7 @@ import (
 	"github.com/siparisa/ServiceCatalog/internal/serviceHandler"
 	"gorm.io/gorm"
 	"net/http"
+	"strconv"
 )
 
 func GetServices(db *gorm.DB, c *gin.Context) {
@@ -32,10 +33,10 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 	repo := repository.NewServiceRepository(db) // Replace 'db' with your Gorm DB instance
 
 	// Create a service instance
-	service := serviceHandler.NewService(repo)
+	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to retrieve a paginated list of services
-	services, err := service.GetServices(servicesToGet)
+	services, err := serviceHndlr.GetServices(servicesToGet)
 	if err != nil {
 		fmt.Println("err::", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve services"})
@@ -46,23 +47,30 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 }
 
 func GetServiceByID(db *gorm.DB, c *gin.Context) {
-	//// Extract the service ID from the URL parameter
-	//serviceID := c.Param("id")
-	//
-	//// Create a repository instance
-	//repo := repository.NewServiceRepository(db) // Replace 'db' with your Gorm DB instance
-	//
-	//// Create a service instance
-	//service := serviceHandler.NewService(repo)
-	//
-	//// Call the service layer to retrieve the service by ID
-	//service, err := service.GetServiceByID(serviceID)
-	//if err != nil {
-	//	c.JSON(http.StatusNotFound, gin.H{"error": "Service not found"})
-	//	return
-	//}
-	//
-	//c.JSON(http.StatusOK, service)
-	c.JSON(http.StatusOK, "gjhgjhghj")
+	// Extract the service ID from the URL parameter
+	// serviceID := c.Param("id")
+
+	var uri request.ServiceURI
+	if err := c.ShouldBindUri(&uri); err != nil {
+		// tatus, res := response.BuildErrorResponse(ctx, err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing id"})
+		return
+	}
+	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
+
+	// Create a repository instance
+	repo := repository.NewServiceRepository(db) // Replace 'db' with your Gorm DB instance
+
+	// Create a service instance
+	serviceHndlr := serviceHandler.NewService(repo)
+
+	// Call the service layer to retrieve the service by ID
+	service, err := serviceHndlr.GetServiceByID(uint(serviceID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Service not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, service)
 
 }

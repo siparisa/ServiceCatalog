@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// Insert a new serviceHandler record
-	name1 := "My Service"
+	name1 := "s12"
 	serviceHandler := entity.Service{
 		Name:        &name1,
 		Description: "A sample serviceHandler",

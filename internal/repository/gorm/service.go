@@ -22,7 +22,14 @@ func NewServiceRepository(db *gorm.DB) IDataService {
 
 func (r *Service) GetServices(servicesToGet entity.Service) ([]entity.Service, error) {
 	var services []entity.Service
-	err := r.db.Table("services").Find(&services).Error
+	query := r.db.Table("services")
+
+	if servicesToGet.Name != nil {
+		// Use the LIKE operator for partial match
+		query = query.Where("name LIKE ?", "%"+*servicesToGet.Name+"%")
+	}
+
+	err := query.Find(&services).Error
 	if err != nil {
 		return nil, err
 	}

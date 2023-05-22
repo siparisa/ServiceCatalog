@@ -1,10 +1,10 @@
-package db
+package entity
 
 import "gorm.io/gorm"
 
 type Service struct {
 	gorm.Model
-	Name        string
+	Name        *string
 	Description string
 	Versions    []string
 }

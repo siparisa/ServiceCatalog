@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/siparisa/ServiceCatalog/internal"
 	"github.com/siparisa/ServiceCatalog/internal/db"
 	"github.com/siparisa/ServiceCatalog/migrations"
 )
@@ -18,28 +19,28 @@ func main() {
 		panic(err)
 	}
 
-	// Insert a new service record
-	service := db.Service{
-		Name:        "My Service",
-		Description: "A sample service",
-		Versions:    []string{"v1", "v2"},
-	}
-	result := dbg.Table("services").Create(&service)
-	if result.Error != nil {
-		fmt.Println("errirr1111")
-		panic(result.Error)
-	}
-
-	// Retrieve the inserted service
-	var retrievedService db.Service
-	result = dbg.Table("services").First(&retrievedService)
-	if result.Error != nil {
-		fmt.Println("errirr222")
-		panic(result.Error)
-	}
-
-	fmt.Println("Inserted Service:")
-	fmt.Println(retrievedService.ID, retrievedService.Name, retrievedService.Description, retrievedService.Versions)
+	//// Insert a new serviceHandler record
+	//serviceHandler := db.Service{
+	//	Name:        "My Service",
+	//	Description: "A sample serviceHandler",
+	//	Versions:    []string{"v1", "v2"},
+	//}
+	//result := dbg.Table("services").Create(&serviceHandler)
+	//if result.Error != nil {
+	//	fmt.Println("errirr1111")
+	//	panic(result.Error)
+	//}
+	//
+	//// Retrieve the inserted serviceHandler
+	//var retrievedService db.Service
+	//result = dbg.Table("services").First(&retrievedService)
+	//if result.Error != nil {
+	//	fmt.Println("errirr222")
+	//	panic(result.Error)
+	//}
+	//
+	r := internal.SetupRouter()
+	r.Run(":8080")
 
 	fmt.Println("Hello, World!")
 }

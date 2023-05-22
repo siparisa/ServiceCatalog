@@ -22,7 +22,7 @@ func NewServiceRepository(db *gorm.DB) IDataService {
 
 func (r *Service) GetServices(servicesToGet entity.Service) ([]entity.Service, error) {
 	var services []entity.Service
-	err := r.db.Find(&services).Error
+	err := r.db.Table("services").Find(&services).Error
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (r *Service) GetServices(servicesToGet entity.Service) ([]entity.Service, e
 
 func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 	var service entity.Service
-	err := r.db.First(&service, id).Error
+	err := r.db.Table("services").First(&service, id).Error
 	if err != nil {
 		return entity.Service{}, err
 	}

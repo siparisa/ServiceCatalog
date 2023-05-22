@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/siparisa/ServiceCatalog/internal"
 	"github.com/siparisa/ServiceCatalog/internal/db"
+	"github.com/siparisa/ServiceCatalog/internal/entity"
 	"github.com/siparisa/ServiceCatalog/migrations"
 )
 
@@ -19,18 +20,19 @@ func main() {
 		panic(err)
 	}
 
-	//// Insert a new serviceHandler record
-	//serviceHandler := db.Service{
-	//	Name:        "My Service",
-	//	Description: "A sample serviceHandler",
-	//	Versions:    []string{"v1", "v2"},
-	//}
-	//result := dbg.Table("services").Create(&serviceHandler)
-	//if result.Error != nil {
-	//	fmt.Println("errirr1111")
-	//	panic(result.Error)
-	//}
-	//
+	// Insert a new serviceHandler record
+	name1 := "My Service"
+	serviceHandler := entity.Service{
+		Name:        &name1,
+		Description: "A sample serviceHandler",
+		Versions:    []string{"v1", "v2"},
+	}
+	result := dbg.Table("services").Create(&serviceHandler)
+	if result.Error != nil {
+		fmt.Println("errirr1111")
+		panic(result.Error)
+	}
+
 	//// Retrieve the inserted serviceHandler
 	//var retrievedService db.Service
 	//result = dbg.Table("services").First(&retrievedService)

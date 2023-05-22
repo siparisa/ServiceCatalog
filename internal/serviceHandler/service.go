@@ -1,30 +1,29 @@
-// Inside serviceHandler/serviceHandler.go
-
 package serviceHandler
 
 import (
 	"github.com/siparisa/ServiceCatalog/internal/entity"
-	"github.com/siparisa/ServiceCatalog/internal/repository"
+	repository "github.com/siparisa/ServiceCatalog/internal/repository/gorm"
 )
 
-// GetServices retrieves a paginated list of services.
-func GetServices(servicesToGet entity.Service, page, limit string) (entity.Service, error) {
-	// Call the repository layer to retrieve a paginated list of services
-	services, err := repository.GetServices
-	if err != nil {
-		return nil, err
-	}
-
-	return services, nil
+type IService interface {
+	GetServices(servicesToGet entity.Service) ([]entity.Service, error)
+	GetServiceByID(id uint) (entity.Service, error)
 }
 
-// GetServiceByID retrieves a serviceHandler by its ID.
-func GetServiceByID(id string) (*model.Service, error) {
-	// Call the repository layer to retrieve the serviceHandler by ID
-	service, err := repository.GetServiceByID(id)
-	if err != nil {
-		return nil, err
-	}
+type Service struct {
+	repo repository.IDataService
+}
 
-	return service, nil
+func NewService(repo repository.IDataService) Service {
+	return Service{
+		repo: repo,
+	}
+}
+
+func (s Service) GetServices(servicesToGet entity.Service) ([]entity.Service, error) {
+	return s.repo.GetServices(servicesToGet)
+}
+
+func (s Service) GetServiceByID(id uint) (entity.Service, error) {
+	return s.repo.GetServiceByID(id)
 }

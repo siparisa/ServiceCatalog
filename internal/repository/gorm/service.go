@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type IService interface {
+type IDataService interface {
 	GetServices(servicesToGet entity.Service) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 }
@@ -14,8 +14,8 @@ type Service struct {
 	db *gorm.DB
 }
 
-func NewServiceRepository(db *gorm.DB) Service {
-	return Service{
+func NewServiceRepository(db *gorm.DB) IDataService {
+	return &Service{
 		db: db,
 	}
 }

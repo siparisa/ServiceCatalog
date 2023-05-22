@@ -39,7 +39,7 @@ func main() {
 	//	panic(result.Error)
 	//}
 	//
-	r := internal.SetupRouter()
+	r := internal.SetupRouter(dbg)
 	r.Run(":8080")
 
 	fmt.Println("Hello, World!")

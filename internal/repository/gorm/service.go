@@ -9,6 +9,7 @@ import (
 type IDataService interface {
 	GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
+	GetVersionsByServiceID(serviceID uint) ([]entity.Version, error)
 }
 
 type Service struct {
@@ -43,6 +44,25 @@ func (r *Service) GetServices(servicesToGet entity.Service, page, limit int) ([]
 	if err != nil {
 		return nil, err
 	}
+
+	for i := range services {
+		versions, err := r.GetVersionsByServiceID(services[i].ID)
+		if err != nil {
+			return nil, err
+		}
+
+		var entityVersions []entity.Version
+		for _, v := range versions {
+			entityVersions = append(entityVersions, entity.Version{
+				Model:     v.Model,
+				ServiceID: v.ServiceID,
+				Version:   v.Version,
+			})
+		}
+
+		services[i].Versions = entityVersions
+	}
+
 	return services, nil
 }
 
@@ -53,4 +73,13 @@ func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 		return entity.Service{}, err
 	}
 	return service, nil
+}
+
+func (r *Service) GetVersionsByServiceID(serviceID uint) ([]entity.Version, error) {
+	var versions []entity.Version
+	err := r.db.Table("versions").Where("service_id = ?", serviceID).Find(&versions).Error
+	if err != nil {
+		return nil, err
+	}
+	return versions, nil
 }

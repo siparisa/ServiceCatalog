@@ -21,11 +21,20 @@ func main() {
 	}
 
 	// Insert a new serviceHandler record
-	name1 := "name22"
+	name1 := "Par"
+	version1 := entity.Version{
+		ServiceID: 1,
+		Version:   "v1",
+	}
+
+	version2 := entity.Version{
+		ServiceID: 1,
+		Version:   "v2",
+	}
 	serviceHandler := entity.Service{
 		Name:        &name1,
 		Description: "name2222",
-		Versions:    []string{"v1", "v2"},
+		Versions:    []entity.Version{version1, version2},
 	}
 	result := dbg.Table("services").Create(&serviceHandler)
 	if result.Error != nil {

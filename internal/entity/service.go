@@ -6,7 +6,7 @@ type Service struct {
 	gorm.Model
 	Name        *string
 	Description string
-	Versions    []string
+	Versions    []Version
 }
 
 func (Service) TableName() string {

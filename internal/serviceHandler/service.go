@@ -21,7 +21,22 @@ func NewService(repo repository.IDataService) Service {
 }
 
 func (s Service) GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error) {
-	return s.repo.GetServices(servicesToGet, page, limit)
+
+	services, err := s.repo.GetServices(servicesToGet, page, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	//// Fetch versions for each service
+	//for i := range services {
+	//	versions, err := s.repo.GetVersionsByServiceID(services[i].ID)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	services[i].Versions = versions
+	//}
+
+	return services, nil
 }
 
 func (s Service) GetServiceByID(id uint) (entity.Service, error) {

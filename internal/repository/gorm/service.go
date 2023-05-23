@@ -1,13 +1,15 @@
 package repository
 
 import (
+	"errors"
+	"github.com/siparisa/ServiceCatalog/internal/controller/helper/request"
 	"github.com/siparisa/ServiceCatalog/internal/entity"
 	"gorm.io/gorm"
 	"strings"
 )
 
 type IDataService interface {
-	GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error)
+	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 	GetVersionsByServiceID(serviceID uint) ([]entity.Version, error)
 }
@@ -22,7 +24,7 @@ func NewServiceRepository(db *gorm.DB) IDataService {
 	}
 }
 
-func (r *Service) GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error) {
+func (r *Service) GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error) {
 	var services []entity.Service
 	query := r.db.Table("services")
 
@@ -37,8 +39,8 @@ func (r *Service) GetServices(servicesToGet entity.Service, page, limit int) ([]
 	}
 
 	// Apply pagination parameters
-	offset := (page - 1) * limit
-	query = query.Offset(offset).Limit(limit)
+	offset := (pagination.Page - 1) * pagination.Limit
+	query = query.Offset(offset).Limit(pagination.Limit)
 
 	err := query.Find(&services).Error
 	if err != nil {
@@ -70,6 +72,9 @@ func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 	var service entity.Service
 	err := r.db.Table("services").First(&service, id).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return entity.Service{}, gorm.ErrRecordNotFound
+		}
 		return entity.Service{}, err
 	}
 	return service, nil

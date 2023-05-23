@@ -42,14 +42,6 @@ func main() {
 		panic(result.Error)
 	}
 
-	//// Retrieve the inserted serviceHandler
-	//var retrievedService db.Service
-	//result = dbg.Table("services").First(&retrievedService)
-	//if result.Error != nil {
-	//	fmt.Println("errirr222")
-	//	panic(result.Error)
-	//}
-	//
 	r := internal.SetupRouter(dbg)
 	r.Run(":8080")
 

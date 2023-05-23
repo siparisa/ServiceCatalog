@@ -3,7 +3,6 @@ package controller
 // Inside controller/services.go
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/siparisa/ServiceCatalog/internal/controller/helper/request"
 	"github.com/siparisa/ServiceCatalog/internal/entity"
@@ -30,9 +29,10 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 	if err != nil {
 		limit = 10 // Set a default limit if not provided or invalid
 	}
-	fmt.Println("page:::", page, "limit:::", limit)
+
 	servicesToGet := entity.Service{
-		Name: qp.Name,
+		Name:        qp.Name,
+		Description: qp.Description,
 	}
 
 	// Create a repository instance

@@ -30,6 +30,11 @@ func (r *Service) GetServices(servicesToGet entity.Service, page, limit int) ([]
 		query = query.Where("LOWER(name) LIKE LOWER(?)", "%"+strings.ToLower(*servicesToGet.Name)+"%")
 	}
 
+	if servicesToGet.Description != "" {
+		// Use the ILIKE operator for case-insensitive partial match
+		query = query.Or("LOWER(description) LIKE LOWER(?)", "%"+strings.ToLower(servicesToGet.Description)+"%")
+	}
+
 	// Apply pagination parameters
 	offset := (page - 1) * limit
 	query = query.Offset(offset).Limit(limit)

@@ -6,7 +6,7 @@ import (
 )
 
 type IService interface {
-	GetServices(servicesToGet entity.Service) ([]entity.Service, error)
+	GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 }
 
@@ -20,8 +20,8 @@ func NewService(repo repository.IDataService) Service {
 	}
 }
 
-func (s Service) GetServices(servicesToGet entity.Service) ([]entity.Service, error) {
-	return s.repo.GetServices(servicesToGet)
+func (s Service) GetServices(servicesToGet entity.Service, page, limit int) ([]entity.Service, error) {
+	return s.repo.GetServices(servicesToGet, page, limit)
 }
 
 func (s Service) GetServiceByID(id uint) (entity.Service, error) {

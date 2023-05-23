@@ -15,30 +15,35 @@ import (
 )
 
 func GetServices(db *gorm.DB, c *gin.Context) {
-	// Extract pagination parameters from query string
-	// page := c.Query("page")
-	// limit := c.Query("limit")
-
 	var qp request.GetServicesQueryParams
 	if err := c.ShouldBindQuery(&qp); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid query parameters"})
 		return
 	}
 
+	// Extract pagination parameters from query string
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1 // Set a default page number if not provided or invalid
+	}
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		limit = 10 // Set a default limit if not provided or invalid
+	}
+	fmt.Println("page:::", page, "limit:::", limit)
 	servicesToGet := entity.Service{
 		Name: qp.Name,
 	}
 
 	// Create a repository instance
-	repo := repository.NewServiceRepository(db) // Replace 'db' with your Gorm DB instance
+	repo := repository.NewServiceRepository(db)
 
 	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to retrieve a paginated list of services
-	services, err := serviceHndlr.GetServices(servicesToGet)
+	services, err := serviceHndlr.GetServices(servicesToGet, page, limit)
 	if err != nil {
-		fmt.Println("err::", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve services"})
 		return
 	}
@@ -47,8 +52,6 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 }
 
 func GetServiceByID(db *gorm.DB, c *gin.Context) {
-	// Extract the service ID from the URL parameter
-	// serviceID := c.Param("id")
 
 	var uri request.ServiceURI
 	if err := c.ShouldBindUri(&uri); err != nil {
@@ -59,7 +62,7 @@ func GetServiceByID(db *gorm.DB, c *gin.Context) {
 	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
 
 	// Create a repository instance
-	repo := repository.NewServiceRepository(db) // Replace 'db' with your Gorm DB instance
+	repo := repository.NewServiceRepository(db)
 
 	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)

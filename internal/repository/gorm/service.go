@@ -9,6 +9,7 @@ import (
 )
 
 type IDataService interface {
+	CreateService(service entity.Service) (entity.Service, error)
 	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 	GetVersionsByServiceID(serviceID uint) ([]entity.Version, error)
@@ -24,9 +25,18 @@ func NewServiceRepository(db *gorm.DB) IDataService {
 	}
 }
 
+func (r *Service) CreateService(service entity.Service) (entity.Service, error) {
+	err := r.db.Table("services").Create(&service).Error
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	return service, nil
+}
+
 func (r *Service) GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error) {
 	var services []entity.Service
-	query := r.db.Table("services")
+	query := r.db.Table("services").Order("created_at DESC")
 
 	if servicesToGet.Name != nil {
 		// Use the ILIKE operator for case-insensitive partial match

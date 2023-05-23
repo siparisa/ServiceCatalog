@@ -11,12 +11,9 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	services := r.Group("/services")
 	{
-		services.GET("", func(c *gin.Context) {
-			controller.GetServices(db, c)
-		})
-		services.GET("/:id", func(c *gin.Context) {
-			controller.GetServiceByID(db, c)
-		})
+		services.POST("", func(c *gin.Context) { controller.CreateService(db, c) })
+		services.GET("", func(c *gin.Context) { controller.GetServices(db, c) })
+		services.GET("/:id", func(c *gin.Context) { controller.GetServiceByID(db, c) })
 	}
 
 	return r

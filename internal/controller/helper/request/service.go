@@ -12,3 +12,14 @@ type GetServicesQueryParams struct {
 type ServiceURI struct {
 	ServiceID string `uri:"id" binding:"required"`
 }
+
+// CreateServiceBody is the request body for creating a service
+type CreateServiceBody struct {
+	Data CreateService `json:"data" binding:"required"`
+}
+
+// CreateService is the request data for creating a service
+type CreateService struct {
+	Name        string `json:"name" binding:"required" example:"service1"`
+	Description string `json:"description" binding:"required" example:"My Service"`
+}

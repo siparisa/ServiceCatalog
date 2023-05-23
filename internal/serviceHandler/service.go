@@ -7,6 +7,7 @@ import (
 )
 
 type IService interface {
+	CreateService(service entity.Service) (entity.Service, error)
 	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 }
@@ -19,6 +20,15 @@ func NewService(repo repository.IDataService) Service {
 	return Service{
 		repo: repo,
 	}
+}
+
+func (s Service) CreateService(service entity.Service) (entity.Service, error) {
+	createdService, err := s.repo.CreateService(service)
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	return createdService, nil
 }
 
 func (s Service) GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error) {

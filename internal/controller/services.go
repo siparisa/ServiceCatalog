@@ -19,16 +19,6 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	// Extract pagination parameters from query string
-	//page, err := strconv.Atoi(c.Query("page"))
-	//if err != nil {
-	//	page = 1 // Set a default page number if not provided or invalid
-	//}
-	//limit, err := strconv.Atoi(c.Query("limit"))
-	//if err != nil {
-	//	limit = 10 // Set a default limit if not provided or invalid
-	//}
-
 	pagination := request.PaginationSettings{
 		Page:  qp.Page,
 		Limit: qp.Limit,
@@ -95,4 +85,33 @@ func GetServiceByID(db *gorm.DB, c *gin.Context) {
 	}
 
 	response.OK(c, service)
+}
+
+func CreateService(db *gorm.DB, c *gin.Context) {
+
+	var body request.CreateServiceBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response.BuildErrorResponse(c, "Invalid request payload", err.Error())
+		return
+	}
+
+	serviceToCreate := entity.Service{
+		Name:        &body.Data.Name,
+		Description: body.Data.Description,
+	}
+
+	// Create a repository instance
+	repo := repository.NewServiceRepository(db)
+
+	// Create a service instance
+	serviceHndlr := serviceHandler.NewService(repo)
+
+	// Call the service layer to create a new service
+	createdService, err := serviceHndlr.CreateService(serviceToCreate)
+	if err != nil {
+		response.InternalServerError(c, "Failed to create service", err.Error())
+		return
+	}
+
+	response.OK(c, createdService)
 }

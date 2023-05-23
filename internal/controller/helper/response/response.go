@@ -40,3 +40,11 @@ func NotFound(ctx *gin.Context, message string) {
 		"error": message,
 	})
 }
+
+// BuildErrorResponse builds an error response with the provided status code, error message, and details.
+func BuildErrorResponse(ctx *gin.Context, message, details string) {
+	ctx.JSON(http.StatusBadRequest, gin.H{
+		"error":   message,
+		"details": details,
+	})
+}

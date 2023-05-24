@@ -1,16 +1,46 @@
-package tests
+package controllerUnitTest
 
 import (
 	"github.com/siparisa/ServiceCatalog/internal/entity"
+	"os"
+	"testing"
+
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-// MigrateDB is a Helper function to perform database migrations
-func MigrateDB(db *gorm.DB) {
+var db *gorm.DB
+
+func TestMain(m *testing.M) {
+	var err error
+	// Create an in-memory SQLite database connection using GORM
+	db, err = gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	if err != nil {
+		panic("failed to open database connection: " + err.Error())
+	}
+
+	// Perform database migrations and setup test data
+	migrateDB(db)
+	setupTestData(db)
+
+	// Run the tests
+	exitCode := m.Run()
+
+	// Close the database connection
+	// err = db.Close()
+	if err != nil {
+		panic("failed to close database connection: " + err.Error())
+	}
+
+	// Exit with the appropriate exit code
+	os.Exit(exitCode)
+}
+
+func migrateDB(db *gorm.DB) {
 	db.AutoMigrate(&entity.Service{}, &entity.Version{})
 }
 
-func SetupTestData(db *gorm.DB) {
+func setupTestData(db *gorm.DB) {
 	db.Exec("DELETE FROM services")
 	db.Exec("DELETE FROM versions")
 

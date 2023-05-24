@@ -56,11 +56,13 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 }
 
 func GetServiceByID(db *gorm.DB, c *gin.Context) {
+
 	var uri request.ServiceURI
 	if err := c.ShouldBindUri(&uri); err != nil {
 		response.BadRequest(c, "Missing ID", err.Error())
 		return
 	}
+
 	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
 	if err != nil {
 		response.BadRequest(c, "Invalid service ID", err.Error())

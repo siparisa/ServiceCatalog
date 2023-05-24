@@ -41,12 +41,12 @@ func (r *Service) GetServices(servicesToGet entity.Service, pagination request.P
 	query := r.db.Table("services").Order("created_at DESC")
 
 	if servicesToGet.Name != nil {
-		// Use the ILIKE operator for case-insensitive partial match
+		// Use the LIKE operator for case-insensitive partial match
 		query = query.Where("LOWER(name) LIKE LOWER(?)", "%"+strings.ToLower(*servicesToGet.Name)+"%")
 	}
 
 	if servicesToGet.Description != "" {
-		// Use the ILIKE operator for case-insensitive partial match
+		// Use the LIKE operator for case-insensitive partial match
 		query = query.Or("LOWER(description) LIKE LOWER(?)", "%"+strings.ToLower(servicesToGet.Description)+"%")
 	}
 

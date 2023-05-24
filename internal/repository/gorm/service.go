@@ -14,6 +14,7 @@ type IDataService interface {
 	GetServiceByID(id uint) (entity.Service, error)
 	GetVersionsByServiceID(serviceID uint) ([]entity.Version, error)
 	UpdateService(service entity.Service) (entity.Service, error)
+	DeleteServiceByID(id uint) error
 }
 
 type Service struct {
@@ -107,4 +108,26 @@ func (r *Service) UpdateService(service entity.Service) (entity.Service, error) 
 	}
 
 	return service, nil
+}
+
+func (r *Service) DeleteServiceByID(id uint) error {
+	// Check if the service exists
+	existingService, err := r.GetServiceByID(id)
+	if err != nil {
+		return err
+	}
+
+	// Delete the associated version records
+	err = r.db.Table("versions").Where("service_id = ?", id).Delete(&entity.Version{}).Error
+	if err != nil {
+		return err
+	}
+
+	// Delete the service record
+	err = r.db.Table("services").Delete(&existingService).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -10,6 +10,7 @@ type IService interface {
 	CreateService(service entity.Service) (entity.Service, error)
 	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
+	DeleteServiceByID(id uint) error
 }
 
 type Service struct {
@@ -65,4 +66,13 @@ func (s Service) UpdateServiceByID(serviceID uint, serviceToUpdate entity.Servic
 	}
 
 	return updatedService, nil
+}
+
+func (s Service) DeleteServiceByID(id uint) error {
+	err := s.repo.DeleteServiceByID(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

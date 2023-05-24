@@ -174,3 +174,35 @@ func CreateService(db *gorm.DB, c *gin.Context) {
 	}
 	response.OK(c, "service created")
 }
+
+func DeleteServiceByID(db *gorm.DB, c *gin.Context) {
+	var uri request.ServiceURI
+	if err := c.ShouldBindUri(&uri); err != nil {
+		response.BadRequest(c, "Missing ID", err.Error())
+		return
+	}
+	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
+	if err != nil {
+		response.BadRequest(c, "Invalid service ID", err.Error())
+		return
+	}
+
+	// Create a repository instance
+	repo := repository.NewServiceRepository(db)
+
+	// Create a service instance
+	serviceHndlr := serviceHandler.NewService(repo)
+
+	// Call the service layer to delete the service by ID
+	err = serviceHndlr.DeleteServiceByID(uint(serviceID))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.NotFound(c, "Service not found")
+		} else {
+			response.InternalServerError(c, "Failed to delete service", err.Error())
+		}
+		return
+	}
+
+	response.OK(c, "Service deleted successfully")
+}

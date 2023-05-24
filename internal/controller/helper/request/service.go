@@ -22,4 +22,5 @@ type CreateServiceBody struct {
 type CreateService struct {
 	Name        string `json:"name" binding:"required" example:"service1"`
 	Description string `json:"description" binding:"required" example:"My Service"`
+	Version     string `json:"version" binding:"required" example:"1.0"`
 }

@@ -30,8 +30,6 @@ func MigrateServicesTable(db *gorm.DB) error {
 		return err
 	}
 
-	// Additional migration logic if needed
-
 	return nil
 }
 
@@ -40,8 +38,6 @@ func RollbackServicesTable(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
-
-	// Additional rollback logic if needed
 
 	return nil
 }

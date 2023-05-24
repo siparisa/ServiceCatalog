@@ -101,10 +101,16 @@ func CreateService(db *gorm.DB, c *gin.Context) {
 	}
 
 	// Create a repository instance
-	repo := repository.NewServiceRepository(db)
+	repoService := repository.NewServiceRepository(db)
 
 	// Create a service instance
-	serviceHndlr := serviceHandler.NewService(repo)
+	serviceHndlr := serviceHandler.NewService(repoService)
+
+	// Create a repository instance
+	repoVersion := repository.NewVersionRepository(db)
+
+	// Create a service instance
+	versionHndlr := serviceHandler.NewVersion(repoVersion)
 
 	// Call the service layer to create a new service
 	createdService, err := serviceHndlr.CreateService(serviceToCreate)
@@ -113,5 +119,16 @@ func CreateService(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	response.OK(c, createdService)
+	// Create the version record
+	version := entity.Version{
+		ServiceID: createdService.ID,
+		Version:   body.Data.Version,
+	}
+
+	_, err = versionHndlr.CreateVersion(version)
+	if err != nil {
+		response.InternalServerError(c, "Failed to create version", err.Error())
+		return
+	}
+	response.OK(c, "service created")
 }

@@ -13,6 +13,7 @@ type IDataService interface {
 	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
 	GetVersionsByServiceID(serviceID uint) ([]entity.Version, error)
+	UpdateService(service entity.Service) (entity.Service, error)
 }
 
 type Service struct {
@@ -97,4 +98,13 @@ func (r *Service) GetVersionsByServiceID(serviceID uint) ([]entity.Version, erro
 		return nil, err
 	}
 	return versions, nil
+}
+
+func (r *Service) UpdateService(service entity.Service) (entity.Service, error) {
+	err := r.db.Table("services").Save(&service).Error
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	return service, nil
 }

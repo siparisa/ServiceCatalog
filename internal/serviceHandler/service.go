@@ -44,3 +44,25 @@ func (s Service) GetServices(servicesToGet entity.Service, pagination request.Pa
 func (s Service) GetServiceByID(id uint) (entity.Service, error) {
 	return s.repo.GetServiceByID(id)
 }
+
+func (s Service) UpdateServiceByID(serviceID uint, serviceToUpdate entity.Service) (entity.Service, error) {
+	service, err := s.repo.GetServiceByID(serviceID)
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	// Update the service fields
+	if serviceToUpdate.Name != nil {
+		service.Name = serviceToUpdate.Name
+	}
+	if serviceToUpdate.Description != "" {
+		service.Description = serviceToUpdate.Description
+	}
+
+	updatedService, err := s.repo.UpdateService(service)
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	return updatedService, nil
+}

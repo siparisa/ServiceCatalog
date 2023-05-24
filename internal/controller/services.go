@@ -87,6 +87,48 @@ func GetServiceByID(db *gorm.DB, c *gin.Context) {
 	response.OK(c, service)
 }
 
+func UpdateServiceByID(db *gorm.DB, c *gin.Context) {
+	var uri request.ServiceURI
+	if err := c.ShouldBindUri(&uri); err != nil {
+		response.BadRequest(c, "Missing ID", err.Error())
+		return
+	}
+	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
+	if err != nil {
+		response.BadRequest(c, "Invalid service ID", err.Error())
+		return
+	}
+
+	var body request.UpdateServiceBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response.BuildErrorResponse(c, "Invalid request payload", err.Error())
+		return
+	}
+
+	serviceToUpdate := entity.Service{
+		Name:        &body.Data.Name,
+		Description: body.Data.Description,
+	}
+
+	// Create a repository instance
+	repo := repository.NewServiceRepository(db)
+
+	// Create a service instance
+	serviceHndlr := serviceHandler.NewService(repo)
+
+	// Call the service layer to update the service by ID
+	updatedService, err := serviceHndlr.UpdateServiceByID(uint(serviceID), serviceToUpdate)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.NotFound(c, "Service not found")
+		} else {
+			response.InternalServerError(c, "Failed to update service", err.Error())
+		}
+		return
+	}
+	response.OK(c, updatedService)
+}
+
 func CreateService(db *gorm.DB, c *gin.Context) {
 
 	var body request.CreateServiceBody

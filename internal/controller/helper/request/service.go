@@ -24,3 +24,14 @@ type CreateService struct {
 	Description string `json:"description" binding:"required" example:"My Service"`
 	Version     string `json:"version" binding:"required" example:"1.0"`
 }
+
+// UpdateServiceBody is the request body for updating a service
+type UpdateServiceBody struct {
+	Data UpdateService `json:"data" binding:"required"`
+}
+
+// UpdateService is the request data for updating a service
+type UpdateService struct {
+	Name        string `json:"name" binding:"omitempty,min=1" example:"service1"`
+	Description string `json:"description" binding:"omitempty,min=1" example:"My Service"`
+}

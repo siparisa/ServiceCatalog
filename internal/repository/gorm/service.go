@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-type IDataService interface {
+// IServiceRepository is an interface for service repository
+type IServiceRepository interface {
 	CreateService(service entity.Service) (entity.Service, error)
 	GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error)
 	GetServiceByID(id uint) (entity.Service, error)
@@ -21,12 +22,13 @@ type Service struct {
 	db *gorm.DB
 }
 
-func NewServiceRepository(db *gorm.DB) IDataService {
+func NewServiceRepository(db *gorm.DB) IServiceRepository {
 	return &Service{
 		db: db,
 	}
 }
 
+// CreateService creates a service
 func (r *Service) CreateService(service entity.Service) (entity.Service, error) {
 	err := r.db.Table("services").Create(&service).Error
 	if err != nil {
@@ -36,6 +38,7 @@ func (r *Service) CreateService(service entity.Service) (entity.Service, error) 
 	return service, nil
 }
 
+// GetServices gets all services or based on the given parameters
 func (r *Service) GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error) {
 	var services []entity.Service
 	query := r.db.Table("services").Order("created_at DESC")
@@ -80,6 +83,7 @@ func (r *Service) GetServices(servicesToGet entity.Service, pagination request.P
 	return services, nil
 }
 
+// GetServiceByID gets service by ID
 func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 	var service entity.Service
 	err := r.db.Table("services").First(&service, id).Error
@@ -92,6 +96,7 @@ func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 	return service, nil
 }
 
+// GetVersionsByServiceID gets versions by serviceID
 func (r *Service) GetVersionsByServiceID(serviceID uint) ([]entity.Version, error) {
 	var versions []entity.Version
 	err := r.db.Table("versions").Where("service_id = ?", serviceID).Find(&versions).Error
@@ -101,6 +106,7 @@ func (r *Service) GetVersionsByServiceID(serviceID uint) ([]entity.Version, erro
 	return versions, nil
 }
 
+// UpdateService updates a service
 func (r *Service) UpdateService(service entity.Service) (entity.Service, error) {
 	err := r.db.Table("services").Save(&service).Error
 	if err != nil {
@@ -110,6 +116,7 @@ func (r *Service) UpdateService(service entity.Service) (entity.Service, error) 
 	return service, nil
 }
 
+// DeleteServiceByID deletes a service by ID
 func (r *Service) DeleteServiceByID(id uint) error {
 	// Check if the service exists
 	existingService, err := r.GetServiceByID(id)

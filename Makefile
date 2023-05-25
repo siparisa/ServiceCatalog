@@ -1,7 +1,13 @@
+.PHONY: run migrate rollback test
+
 run:
 	go run ./cmd/main.go
 
 migrate:
-	go run ./migrations/*.go
+	go run ./cmd/migration.go
 
-.PHONY: run migrate
+rollback:
+	go run ./cmd/rollback.go
+
+test:
+	go test ./tests/unit/controllerUnitTest

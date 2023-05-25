@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/siparisa/ServiceCatalog/internal"
 	"github.com/siparisa/ServiceCatalog/internal/db"
+	"github.com/siparisa/ServiceCatalog/migrations"
 	"log"
 )
 
@@ -18,9 +18,9 @@ func main() {
 	}
 	defer sqlDB.Close()
 
-	r := internal.SetupRouter(dbg)
-	err = r.Run(":8080")
+	err = migrations.RollbackServicesTable(dbg)
 	if err != nil {
-		log.Fatalf("failed to start server: %v", err)
+		log.Fatalf("failed to rollback services table: %v", err)
 	}
+
 }

@@ -39,10 +39,8 @@ func GetServices(db *gorm.DB, c *gin.Context) {
 		Description: qp.Description,
 	}
 
-	// Create a repository instance
 	repo := repository.NewServiceRepository(db)
 
-	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to retrieve a paginated list of services
@@ -69,10 +67,8 @@ func GetServiceByID(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	// Create a repository instance
 	repo := repository.NewServiceRepository(db)
 
-	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to retrieve the service by ID
@@ -112,10 +108,8 @@ func UpdateServiceByID(db *gorm.DB, c *gin.Context) {
 		Description: body.Data.Description,
 	}
 
-	// Create a repository instance
 	repo := repository.NewServiceRepository(db)
 
-	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to update the service by ID
@@ -144,16 +138,12 @@ func CreateService(db *gorm.DB, c *gin.Context) {
 		Description: body.Data.Description,
 	}
 
-	// Create a repository instance
 	repoService := repository.NewServiceRepository(db)
 
-	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repoService)
 
-	// Create a repository instance
 	repoVersion := repository.NewVersionRepository(db)
 
-	// Create a service instance
 	versionHndlr := serviceHandler.NewVersion(repoVersion)
 
 	// Call the service layer to create a new service
@@ -189,13 +179,10 @@ func DeleteServiceByID(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	// Create a repository instance
 	repo := repository.NewServiceRepository(db)
 
-	// Create a service instance
 	serviceHndlr := serviceHandler.NewService(repo)
 
-	// Call the service layer to delete the service by ID
 	err = serviceHndlr.DeleteServiceByID(uint(serviceID))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

@@ -35,15 +35,15 @@ func TestGetServices(t *testing.T) {
 	var response []entity.Service
 	_ = json.Unmarshal(w.Body.Bytes(), &response)
 
-	name1 := "Service 1"
-	name2 := "Service 2"
+	name1 := "Service1"
+	name2 := "Service2"
 
 	// Assert the response content
 	expectedResponse := []entity.Service{
 		{
 			Model:       gorm.Model{ID: 1, CreatedAt: time.Time{}, UpdatedAt: time.Time{}, DeletedAt: gorm.DeletedAt{}},
 			Name:        &name1,
-			Description: "Description 1",
+			Description: "Description1",
 			Versions: []entity.Version{
 				{
 					Model:     gorm.Model{ID: 1, CreatedAt: time.Time{}, UpdatedAt: time.Time{}, DeletedAt: gorm.DeletedAt{}},
@@ -60,7 +60,7 @@ func TestGetServices(t *testing.T) {
 		{
 			Model:       gorm.Model{ID: 2, CreatedAt: time.Time{}, UpdatedAt: time.Time{}, DeletedAt: gorm.DeletedAt{}},
 			Name:        &name2,
-			Description: "Description 2",
+			Description: "Description2",
 			Versions: []entity.Version{
 				{
 					Model:     gorm.Model{ID: 3, CreatedAt: time.Time{}, UpdatedAt: time.Time{}, DeletedAt: gorm.DeletedAt{}},

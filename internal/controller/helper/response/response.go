@@ -21,14 +21,6 @@ func InternalServerError(ctx *gin.Context, message string, details string) {
 	})
 }
 
-// BadRequestWithDetails sends a Bad Request response with the provided error message and details.
-func BadRequestWithDetails(ctx *gin.Context, message, details string) {
-	ctx.JSON(http.StatusBadRequest, gin.H{
-		"error":   message,
-		"details": details,
-	})
-}
-
 // OK sends a success response with the provided data.
 func OK(ctx *gin.Context, data interface{}) {
 	ctx.JSON(http.StatusOK, data)
@@ -41,7 +33,7 @@ func NotFound(ctx *gin.Context, message string) {
 	})
 }
 
-// BuildErrorResponse builds an error response with the provided status code, error message, and details.
+// BuildErrorResponse builds an error response with the provided error message, and details.
 func BuildErrorResponse(ctx *gin.Context, message, details string) {
 	ctx.JSON(http.StatusBadRequest, gin.H{
 		"error":   message,

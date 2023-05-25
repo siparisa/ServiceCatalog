@@ -26,13 +26,13 @@ func TestMain(m *testing.M) {
 	// Run the tests
 	exitCode := m.Run()
 
-	// Close the database connection
-	// err = db.Close()
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+
 	if err != nil {
 		panic("failed to close database connection: " + err.Error())
 	}
 
-	// Exit with the appropriate exit code
 	os.Exit(exitCode)
 }
 
@@ -75,7 +75,7 @@ func setupTestData(db *gorm.DB) {
 		Description: "Description2",
 		Versions: []entity.Version{
 			{
-				Version: "v1",
+				Version: "1.0",
 			},
 		},
 	}

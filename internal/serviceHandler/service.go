@@ -14,15 +14,16 @@ type IService interface {
 }
 
 type Service struct {
-	repo repository.IDataService
+	repo repository.IServiceRepository
 }
 
-func NewService(repo repository.IDataService) Service {
+func NewService(repo repository.IServiceRepository) Service {
 	return Service{
 		repo: repo,
 	}
 }
 
+// CreateService creates a service
 func (s Service) CreateService(service entity.Service) (entity.Service, error) {
 	createdService, err := s.repo.CreateService(service)
 	if err != nil {
@@ -32,6 +33,7 @@ func (s Service) CreateService(service entity.Service) (entity.Service, error) {
 	return createdService, nil
 }
 
+// GetServices gets all services
 func (s Service) GetServices(servicesToGet entity.Service, pagination request.PaginationSettings) ([]entity.Service, error) {
 
 	services, err := s.repo.GetServices(servicesToGet, pagination)
@@ -42,10 +44,12 @@ func (s Service) GetServices(servicesToGet entity.Service, pagination request.Pa
 	return services, nil
 }
 
+// GetServiceByID gets service by ID
 func (s Service) GetServiceByID(id uint) (entity.Service, error) {
 	return s.repo.GetServiceByID(id)
 }
 
+// UpdateServiceByID updates a service by ID
 func (s Service) UpdateServiceByID(serviceID uint, serviceToUpdate entity.Service) (entity.Service, error) {
 	service, err := s.repo.GetServiceByID(serviceID)
 	if err != nil {
@@ -68,6 +72,7 @@ func (s Service) UpdateServiceByID(serviceID uint, serviceToUpdate entity.Servic
 	return updatedService, nil
 }
 
+// DeleteServiceByID deletes a service by ID
 func (s Service) DeleteServiceByID(id uint) error {
 	err := s.repo.DeleteServiceByID(id)
 	if err != nil {

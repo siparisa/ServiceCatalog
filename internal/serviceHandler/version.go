@@ -20,6 +20,7 @@ func NewVersion(repo repository.IVersionRepository) IVersion {
 	}
 }
 
+// CreateVersion creates a version
 func (vs *VersionService) CreateVersion(version entity.Version) (entity.Version, error) {
 	createdVersion, err := vs.repo.CreateVersion(version)
 	if err != nil {
@@ -29,6 +30,7 @@ func (vs *VersionService) CreateVersion(version entity.Version) (entity.Version,
 	return createdVersion, nil
 }
 
+// GetVersionsByServiceID gets versions for a service
 func (vs *VersionService) GetVersionsByServiceID(serviceID uint) ([]entity.Version, error) {
 	return vs.repo.GetVersionsByServiceID(serviceID)
 }

@@ -2,10 +2,13 @@
 
 ## Introduction
 
-Services service is responsible for providing the domain of *Organization Services*.
+`Services`  is responsible for providing the domain of *Organization's Services*.
 
 ## Contents
 
+* [API Documentation](#API-Documentation)
+    * [Installation]()
+    * [Endpoints]()
 * [Development](#development)
     * [Prerequisites](#prerequisites)
     * [Make Commands](#make-commands)
@@ -18,7 +21,110 @@ Services service is responsible for providing the domain of *Organization Servic
         * [Service Dependencies](#service-dependencies)
         * [Environment Variables](#environment-variables)
 
-    
+## API Documentation
+
+### Installation
+  to start the service check `Prerequisites` of this file then run `make watch` from the root directory of the project and run below endpoints.
+
+example : `http://localhost:8080/services/2` 
+
+### Endpoints
+
+all Endpoints are located in server.go to call related handlers.
+this is the router group :`/services`
+
+**1.Create a Service**
+Endpoint: `POST /services` 
+
+Request Body:
+```
+{
+  "data": {
+    "name": "my name",
+    "description": "My Servic",
+    "version": "1.0"
+  }
+}
+```
+Please note that the request body is in JSON format and includes the following parameters:
+
+**name** (string): The name of the service.
+**description** (string): The description of the service.
+**version** (string): The version of the service. 
+
+**2.Get Services**
+Endpoint: `GET /services`
+
+Description: Retrieve a list of services.
+
+Query Parameters:
+
+**name** (string, optional): Filter services by name.
+**page** (integer, optional): The page number for pagination.
+**limit** (integer, optional): The maximum number of services to return per page.
+**description** (string, optional): Filter services by description.
+Example Request:
+```
+GET /services?name=name1&page=1&limit=10&description=service1
+```
+Please note that all query parameters are optional. You can include any combination of the parameters in the request URL to filter and paginate the results.
+
+**3.Get Service by ID**
+Endpoint: `GET /services/:serviceID` 
+
+Description: Retrieve a specific service by its ID.
+
+Path Parameters:
+
+serviceID (integer): The ID of the service to retrieve. 
+
+Example Request:
+```
+GET /services/2
+```
+In this example, the serviceID is provided as part of the URL path to specify the ID of the desired service.
+
+**4.Update Service by ID**
+Endpoint: `PUT /services/:serviceID`
+
+Description: Update a specific service by its ID.
+
+Path Parameters:
+
+serviceID (integer): The ID of the service to update. 
+
+Body Parameters:
+
+**data** (object, optional): The data to update for the service.
+**name** (string, optional): The new name of the service.
+**description** (string, optional): The new description of the service.
+version (string, optional): The new version of the service.
+Example Request:
+_PUT /services/2_
+```
+{
+  "data": {
+    "name": "name2",
+    "description": "My service2",
+    "version": "2.0"
+  }
+}
+```
+In this example, the serviceID is provided as part of the URL path to specify the ID of the service to update. The body contains optional parameters (name, description, version) to update the service's information.
+
+**5.Delete Service by ID**
+Endpoint: `DELETE /services/:serviceID` 
+
+Description: Delete a specific service by its ID.
+
+Path Parameters:
+
+**serviceID** (integer): The ID of the service to delete.
+Example Request:
+```
+DELETE /services/2
+```
+
 ## Development
 
 ### Prerequisites
@@ -73,7 +179,7 @@ The `entity` is the entities that represents the model in the database.
 `internal/controller/helper` contains the models for every request and response.
 The `helper` should not be used in `Service` or `Repository`.
 
-
+## Deployment
 #### Infrastructure Dependencies
 
 Services Service depends on Postgres, it is connected to Postgres Database.

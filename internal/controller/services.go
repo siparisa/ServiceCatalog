@@ -9,7 +9,6 @@ import (
 	repository "github.com/siparisa/ServiceCatalog/internal/repository/gorm"
 	"github.com/siparisa/ServiceCatalog/internal/serviceHandler"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 func GetServices(db *gorm.DB, c *gin.Context) {
@@ -61,18 +60,12 @@ func GetServiceByID(db *gorm.DB, c *gin.Context) {
 		return
 	}
 
-	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
-	if err != nil {
-		response.BadRequest(c, "Invalid service ID", err.Error())
-		return
-	}
-
 	repo := repository.NewServiceRepository(db)
 
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to retrieve the service by ID
-	service, err := serviceHndlr.GetServiceByID(uint(serviceID))
+	service, err := serviceHndlr.GetServiceByID(uri.ServiceID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.NotFound(c, "Service not found")
@@ -89,11 +82,6 @@ func UpdateServiceByID(db *gorm.DB, c *gin.Context) {
 	var uri request.ServiceURI
 	if err := c.ShouldBindUri(&uri); err != nil {
 		response.BadRequest(c, "Missing ID", err.Error())
-		return
-	}
-	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
-	if err != nil {
-		response.BadRequest(c, "Invalid service ID", err.Error())
 		return
 	}
 
@@ -113,7 +101,7 @@ func UpdateServiceByID(db *gorm.DB, c *gin.Context) {
 	serviceHndlr := serviceHandler.NewService(repo)
 
 	// Call the service layer to update the service by ID
-	updatedService, err := serviceHndlr.UpdateServiceByID(uint(serviceID), serviceToUpdate)
+	updatedService, err := serviceHndlr.UpdateServiceByID(uri.ServiceID, serviceToUpdate)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.NotFound(c, "Service not found")
@@ -173,17 +161,12 @@ func DeleteServiceByID(db *gorm.DB, c *gin.Context) {
 		response.BadRequest(c, "Missing ID", err.Error())
 		return
 	}
-	serviceID, err := strconv.ParseUint(uri.ServiceID, 10, 64)
-	if err != nil {
-		response.BadRequest(c, "Invalid service ID", err.Error())
-		return
-	}
 
 	repo := repository.NewServiceRepository(db)
 
 	serviceHndlr := serviceHandler.NewService(repo)
 
-	err = serviceHndlr.DeleteServiceByID(uint(serviceID))
+	err := serviceHndlr.DeleteServiceByID(uri.ServiceID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			response.NotFound(c, "Service not found")

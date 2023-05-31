@@ -93,6 +93,13 @@ func (r *Service) GetServiceByID(id uint) (entity.Service, error) {
 		}
 		return entity.Service{}, err
 	}
+
+	versions, err := r.GetVersionsByServiceID(service.ID)
+	if err != nil {
+		return entity.Service{}, err
+	}
+
+	service.Versions = versions
 	return service, nil
 }
 

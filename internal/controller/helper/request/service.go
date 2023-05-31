@@ -10,7 +10,7 @@ type GetServicesQueryParams struct {
 
 // ServiceURI contains the uri parts for service requests
 type ServiceURI struct {
-	ServiceID string `uri:"serviceID" binding:"required"`
+	ServiceID uint `uri:"serviceID" binding:"required"`
 }
 
 // CreateServiceBody is the request body for creating a service

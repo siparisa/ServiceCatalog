@@ -60,7 +60,7 @@ func (s Service) UpdateServiceByID(serviceID uint, serviceToUpdate entity.Servic
 	if serviceToUpdate.Name != nil {
 		service.Name = serviceToUpdate.Name
 	}
-	if serviceToUpdate.Description != "" {
+	if serviceToUpdate.Description != nil {
 		service.Description = serviceToUpdate.Description
 	}
 

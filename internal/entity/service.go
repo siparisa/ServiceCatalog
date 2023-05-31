@@ -6,7 +6,7 @@ import "gorm.io/gorm"
 type Service struct {
 	gorm.Model  // Embedded struct from GORM providing common fields like ID, CreatedAt, UpdatedAt, DeletedAt
 	Name        *string
-	Description string
+	Description *string
 	Versions    []Version
 }
 

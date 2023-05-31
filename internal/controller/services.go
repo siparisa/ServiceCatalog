@@ -93,7 +93,7 @@ func UpdateServiceByID(db *gorm.DB, c *gin.Context) {
 
 	serviceToUpdate := entity.Service{
 		Name:        &body.Data.Name,
-		Description: body.Data.Description,
+		Description: &body.Data.Description,
 	}
 
 	repo := repository.NewServiceRepository(db)
@@ -123,7 +123,7 @@ func CreateService(db *gorm.DB, c *gin.Context) {
 
 	serviceToCreate := entity.Service{
 		Name:        &body.Data.Name,
-		Description: body.Data.Description,
+		Description: &body.Data.Description,
 	}
 
 	repoService := repository.NewServiceRepository(db)

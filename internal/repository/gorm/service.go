@@ -48,9 +48,9 @@ func (r *Service) GetServices(servicesToGet entity.Service, pagination request.P
 		query = query.Where("LOWER(name) LIKE LOWER(?)", "%"+strings.ToLower(*servicesToGet.Name)+"%")
 	}
 
-	if servicesToGet.Description != "" {
+	if servicesToGet.Description != nil {
 		// Use the LIKE operator for case-insensitive partial match
-		query = query.Or("LOWER(description) LIKE LOWER(?)", "%"+strings.ToLower(servicesToGet.Description)+"%")
+		query = query.Or("LOWER(description) LIKE LOWER(?)", "%"+strings.ToLower(*servicesToGet.Description)+"%")
 	}
 
 	// Apply pagination parameters

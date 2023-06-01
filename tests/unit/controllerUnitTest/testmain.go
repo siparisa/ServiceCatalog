@@ -45,10 +45,11 @@ func setupTestData(db *gorm.DB) {
 	db.Exec("DELETE FROM versions")
 
 	name1 := "Service1"
+	desc1 := "Description1"
 	// Create test services
 	service1 := entity.Service{
 		Name:        &name1,
-		Description: "Description1",
+		Description: &desc1,
 		Versions: []entity.Version{
 			{
 				Version: "1.0",
@@ -70,9 +71,10 @@ func setupTestData(db *gorm.DB) {
 	}
 
 	name2 := "Service2"
+	desc2 := "Description2"
 	service2 := entity.Service{
 		Name:        &name2,
-		Description: "Description2",
+		Description: &desc2,
 		Versions: []entity.Version{
 			{
 				Version: "1.0",

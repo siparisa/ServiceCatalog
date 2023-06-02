@@ -10,7 +10,7 @@ rollback:
 	go run ./cmd/rollback.go
 
 test:
-	go test ./tests/unit/controllerUnitTest
+	go test ./tests/unit/controllerUnit
 
 watch:
 	@if docker ps -f "name=my-postgres-container" --format "{{.Names}}" | grep -q "my-postgres-container"; then \

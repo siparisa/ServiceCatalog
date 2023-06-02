@@ -1,40 +1,35 @@
-package controllerUnitTest
+package controllerUnit
 
 import (
 	"github.com/siparisa/ServiceCatalog/internal/entity"
-	"os"
-	"testing"
-
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-func TestMain(m *testing.M) {
-	var err error
-	// Create an in-memory SQLite database connection using GORM
-	db, err = gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
-	if err != nil {
-		panic("failed to open database connection: " + err.Error())
-	}
-
-	// Perform database migrations and setup test data
-	migrateDB(db)
-	setupTestData(db)
-
-	// Run the tests
-	exitCode := m.Run()
-
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
-
-	if err != nil {
-		panic("failed to close database connection: " + err.Error())
-	}
-
-	os.Exit(exitCode)
-}
+//func TestMain(m *testing.M) {
+//	m.Run()
+//	var err error
+//	// Create an in-memory SQLite database connection using GORM
+//	db, err = gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+//	if err != nil {
+//		panic("failed to open database connection: " + err.Error())
+//	}
+//
+//	// Perform database migrations and setup test data
+//	migrateDB(db)
+//	setupTestData(db)
+//
+//	// Run the tests
+//	exitCode := m.Run()
+//
+//	sqlDB, err := db.DB()
+//	defer sqlDB.Close()
+//
+//	if err != nil {
+//		panic("failed to close database connection: " + err.Error())
+//	}
+//
+//	os.Exit(exitCode)
+//}
 
 func migrateDB(db *gorm.DB) {
 	db.AutoMigrate(&entity.Service{}, &entity.Version{})

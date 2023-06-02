@@ -18,8 +18,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		services.DELETE("/:serviceID", func(c *gin.Context) { controller.DeleteServiceByID(db, c) })
 
 		// to implement in future
-		//services.GET("/:id/versions", func(c *gin.Context) { controller.GetServiceVersions(db, c) })
-		//services.POST("/:id/versions", func(c *gin.Context) { controller.CreateServiceVersion(db, c) })
+		// services.GET("/:id/versions", func(c *gin.Context) { controller.GetServiceVersions(db, c) })
+		// services.POST("/:id/versions", func(c *gin.Context) { controller.CreateServiceVersion(db, c) })
 
 	}
 

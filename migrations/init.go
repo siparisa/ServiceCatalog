@@ -1,9 +1,14 @@
 package migrations
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Service struct {
-	gorm.Model
+	ID          uint `gorm:"primaryKey"`
+	CreatedAt   int64
+	UpdatedAt   int64
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
 	Name        string
 	Description string
 }
@@ -13,7 +18,10 @@ func (Service) TableName() string {
 }
 
 type Version struct {
-	gorm.Model
+	ID        uint `gorm:"primaryKey"`
+	CreatedAt int64
+	UpdatedAt int64
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 	ServiceID uint
 	Version   string
 }
@@ -21,3 +29,27 @@ type Version struct {
 func (Version) TableName() string {
 	return "versions"
 }
+
+//package migrations
+//
+//import "gorm.io/gorm"
+//
+//type Service struct {
+//	gorm.Model
+//	Name        string
+//	Description string
+//}
+//
+//func (Service) TableName() string {
+//	return "services"
+//}
+//
+//type Version struct {
+//	gorm.Model
+//	ServiceID uint
+//	Version   string
+//}
+//
+//func (Version) TableName() string {
+//	return "versions"
+//}

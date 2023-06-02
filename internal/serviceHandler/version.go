@@ -14,8 +14,8 @@ type VersionService struct {
 	repo repository.IVersionRepository
 }
 
-func NewVersion(repo repository.IVersionRepository) IVersion {
-	return &VersionService{
+func NewVersion(repo repository.IVersionRepository) VersionService {
+	return VersionService{
 		repo: repo,
 	}
 }
